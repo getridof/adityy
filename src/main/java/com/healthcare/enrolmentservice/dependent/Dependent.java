@@ -1,9 +1,7 @@
 package com.healthcare.enrolmentservice.dependent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.healthcare.enrolmentservice.enrollee.Enrollee;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
