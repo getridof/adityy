@@ -1,5 +1,6 @@
 package com.healthcare.enrolmentservice.dependent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.healthcare.enrolmentservice.enrollee.Enrollee;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Dependent {
     private LocalDate dateOfBirth;
 
     @ManyToOne( fetch = FetchType.LAZY)
+    @JsonIgnore
     private Enrollee enrollee;
 
     @Override

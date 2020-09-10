@@ -7,8 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Objects;
 
 @RestController
 public class EnrolleeController {
@@ -16,10 +15,13 @@ public class EnrolleeController {
     @Autowired
     private EnrolleeRepository enrolleeRepository;
 
+    @Autowired
+    private EnrolleeService enrolleeService;
+
     @PostMapping("/enrollees")
     public ResponseEntity<Enrollee> createEnrollee(@RequestBody final Enrollee enrollee) {
 
-        Enrollee savedEnrollee = enrolleeRepository.save(enrollee);
+        Enrollee savedEnrollee = enrolleeService.createEnrollee(enrollee);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedEnrollee.getId()).toUri();
 
@@ -28,26 +30,24 @@ public class EnrolleeController {
 
     @PutMapping("/enrollees/{enrolleeID}")
     public ResponseEntity<Enrollee> updateEnrollee(@RequestBody final Enrollee enrollee,
-                                                   @PathVariable("enrolleeID") UUID enrolleID) {
+                                                   @PathVariable("enrolleeID") String enrolleID) {
 
-        Optional<Enrollee> enrolleeOptional = enrolleeRepository.findById(enrolleID);
+        Enrollee enrollee1 = enrolleeService.updateEnrollee(enrollee, enrolleID);
 
-        if(enrolleeOptional.isEmpty())
+        if(Objects.isNull(enrollee1))
             return ResponseEntity.notFound().build();
 
-        enrollee.setId(enrolleID);
-        enrolleeRepository.save(enrollee);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/enrollees/{enrolleeID}")
-    public ResponseEntity<Enrollee> deleteEnrollee(@PathVariable UUID enrolleeID) {
-        enrolleeRepository.deleteById(enrolleeID);
+    public ResponseEntity<Enrollee> deleteEnrollee(@PathVariable("enrolleeID") String enrolleeID) {
+        enrolleeService.deleteEnrollee(enrolleeID);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/enrollees")
     public ResponseEntity<List<Enrollee>> getAllEnrolles() {
-        return ResponseEntity.ok(enrolleeRepository.findAll());
+        return ResponseEntity.ok(enrolleeService.getAllEnrollee());
     }
 }
